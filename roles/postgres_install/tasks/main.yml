@@ -1,0 +1,28 @@
+---
+
+- name: Update packages
+  apt: name=* state=latest
+
+- name: Install packages
+  apt:
+    name:
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+    - python3-psycopg2
+    - acl
+    state: present
+
+- name: Check if Database is initialized
+  stat:
+    path: /etc/postgresql/14/main/pg_hba.conf
+  register: postgres_data
+
+- name: Initialize the database
+  shell: postgresql-setup initdb
+  when: not postgres_data.stat.exists
+
+
+    
+
+

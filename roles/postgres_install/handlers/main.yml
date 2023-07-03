@@ -1,0 +1,7 @@
+---
+# handlers file for postgres_install
+#
+- name: restart postgres
+  service: 
+    name: postgresql 
+    state: restarted

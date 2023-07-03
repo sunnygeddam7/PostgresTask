@@ -1,0 +1,6 @@
+---
+# vars file for postgres_db
+#
+db_user: benz
+db_password: benz
+db_name: benz_db

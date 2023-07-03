@@ -1,0 +1,44 @@
+- name: "Create db user"
+  postgresql_user:
+    state: present
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+  become_user: postgres
+
+- name: "Create app database"
+  postgresql_db:
+    state: present
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+  become_user: postgres
+
+- name: "Grant db user access to app db"
+  postgresql_privs:
+    type: database
+    database: "{{ db_name }}"
+    roles: "{{ db_user }}"
+    grant_option: true
+    privs: all
+  become_user: postgres 
+
+- name: "Allow md5 connection for the db user"
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/14/main/pg_hba.conf"
+    contype: host
+    databases: all
+    method: md5
+    users: "{{ db_user }}"
+    create: true
+  become_user: postgres  
+  notify: restart postgres
+
+- name: add data to database
+  copy:
+    dest: /tmp/dump.sql
+    mode: '0666'
+    content: |
+        CREATE TABLE IF NOT EXISTS test (           
+        message varchar(255) NOT NULL         
+        );          
+        INSERT INTO test(message) VALUES('Ansible is fun');
+        ALTER TABLE test OWNER TO "benz";
