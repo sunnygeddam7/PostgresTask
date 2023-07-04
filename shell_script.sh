@@ -32,4 +32,4 @@ grep -Eo 'GET\s([^[:space:]]+\.(gif|png|jpeg|jpg))' httpd.log | wc -l
  
 #Create a file with IP address, date, Complete URL, sucess/failure
 echo "creating a file with IP address, date, Complete URL, sucess/failure"
-awk '/(gif|png|jpeg|jpg)/ {split($4, date, "[/:]"); split($7, url, "\""); status = ($9 == "200") ? "Success" : "Failure"; print $1, date[2], date[1], date[3], $7, status}' httpd.log > last
+awk '/(gif|png|jpeg|jpg)/ {split($4, date, "[/:]"); split($7, url, "\""); status = ($9 == "200") ? "Success" : "Failure"; print $1, date[2], date[1], date[3], $7, status}' httpd.log 
